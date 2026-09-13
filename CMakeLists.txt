@@ -7,6 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(ELF_Parser
     src/main.c
+    src/elf.c
+    include/elf.h
 )
 
 target_include_directories(ELF_Parser

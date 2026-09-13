@@ -6,7 +6,7 @@
 #define ELF_PARSER_ELF_H
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
+#include<stdio.h>
 
 // ELF_PARSER_ELF_H
 #define EI_NIDENT 16
@@ -18,17 +18,16 @@
  * randomization) ET_DYN 3 = shared file ET_CORE 4 = core file
  */
 const static unsigned char MAGIC[4] = {0x7f, 'E', 'L', 'F'};
-bool elf_isvalid(const uint8_t *data);
-
-
+bool elf_isvalid(FILE *file);
+uint8_t getelf_class(FILE *file);
 typedef struct ELFHeader {
   unsigned char e_ident[EI_NIDENT];
   uint16_t e_type;    // type of the elf file
   uint16_t e_machine; // machine type
-  uint32_t e_version;     // version always 1
-  uint64_t e_entry;    // entry point for the exectuables
-  uint64_t e_phoff;     // program headers offset
-  uint64_t e_shoff;     // section headers offset
+  uint32_t e_version; // version always 1
+  uint64_t e_entry;   // entry point for the exectuables
+  uint64_t e_phoff;   // program headers offset
+  uint64_t e_shoff;   // section headers offset
   uint32_t e_flags;
   uint16_t e_ehsize;    // size
   uint16_t e_phentsize; // size per program header
@@ -38,5 +37,34 @@ typedef struct ELFHeader {
   uint16_t e_shstrndx;
 
 } ELFHeader;
+#pragma pack(push, 1)
+typedef struct SectionHeader {
+  uint32_t sh_name;
+  uint32_t sh_type;
+  uint64_t sh_flags;
+  uint64_t sh_addr;
+  uint64_t sh_offset;
+  uint64_t sh_size;
+  uint32_t sh_link;
+  uint32_t sh_info;
+  uint64_t sh_addralign;
+  uint64_t sh_entsize;
+
+} SectionHeader;
+// section i
+//  offset = e_shoff + (i * e_shentsize)
+#pragma pack(pop)
+typedef struct ELF_File {
+    FILE *file;
+    ELFHeader header;
+    SectionHeader *section_header;
+    char *section_string_table;
+}ELF_FILE;
+ELFHeader readheader(FILE *file);
+SectionHeader *read_section_header(FILE *file,ELFHeader header);
+char *read_section_string(FILE *file, SectionHeader *section_headers,
+                         ELFHeader header);
+ELF_FILE *elf_open(FILE *file);
+
 
 #endif
