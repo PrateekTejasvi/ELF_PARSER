@@ -65,6 +65,7 @@ SectionHeader *read_section_header(FILE *file,ELFHeader header);
 char *read_section_string(FILE *file, SectionHeader *section_headers,
                          ELFHeader header);
 ELF_FILE *elf_open(FILE *file);
+void elf_close(ELF_FILE *elf);
 
 
 #endif

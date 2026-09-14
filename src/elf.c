@@ -10,7 +10,11 @@ ELF_FILE *elf_open(FILE *file){
     elf->section_string_table = read_section_string(file, elf->section_header, elf->header);
     return elf;
 }
-
+void elf_close(ELF_FILE *elf){
+    free(elf->section_string_table);
+    free(elf->section_header);
+    free(elf);
+}
 bool elf_isvalid(FILE *file){
     unsigned char data[4];
     fseek(file,0L,SEEK_SET);
