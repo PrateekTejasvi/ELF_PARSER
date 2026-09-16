@@ -23,9 +23,6 @@ int main(int argc, char **argv) {
   // NOTE:the outputs here are actually in decimal
 
   ELF_FILE *open = elf_open(file);
-  for(int i=1;i<open->header.e_shnum;i++){
-      printf("[%d]:%s\n",i,&open->section_string_table[open->section_header[i].sh_name]);
-  }//section0 is the NULL section
   elf_close(open);
 
   fclose(file);
